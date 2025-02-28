@@ -106,28 +106,36 @@
       }
 
       // Send the phone number to your webhook in the request body
-      const webhookUrl = 'https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjYwNTY5MDYzNjA0MzE1MjY4NTUzNDUxMzQi_pc'; // Replace with your webhook URL
-      const payload = {
-        phone: "acd"// Include the phone number in the request body
-      };
+    async function postToPabblyWebhook(data) {
+    const url = "https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjYwNTY5MDYzNjA0MzE1MjY4NTUzNDUxMzQi_pc";
 
-      try {
-        const response = await fetch(webhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json' // Set the content type to JSON
-          },
-          body: JSON.stringify(payload) // Convert the payload to JSON
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
         });
 
-        if (response.ok) {
-          console.log('Webhook request successful');
-        } else {
-          console.error('Webhook request failed');
+        if (!response.ok) {
+            throw new Error("HTTP error! Status: " + response.status);
         }
-      } catch (error) {
-        console.error('Error sending webhook request:', error);
-      }
+
+        const result = await response.json();
+        console.log("Pabbly Webhook Response:", result);
+    } catch (error) {
+        console.error("Error posting to Pabbly webhook:", error);
+    }
+}
+
+// Example usage:
+const requestData = {
+    phone: phone
+};
+
+postToPabblyWebhook(requestData);
+
 
       // Open WhatsApp chat with the specified number
       const whatsappUrl = `https://wa.me/15551503055`;
